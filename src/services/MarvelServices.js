@@ -26,6 +26,7 @@ class MarvelServices {
 
     _transformResponse = (char) => {
         return {
+            id: char.id,
             name: char.name,
             description: char.description ? `${char.description.slice(0, 215)}...` : 'Sorry, we don\'t have any data for this character.',
             thumbnail: char.thumbnail.path + '.' + char.thumbnail.extension,

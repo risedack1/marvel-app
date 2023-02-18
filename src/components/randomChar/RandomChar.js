@@ -34,10 +34,6 @@ class RandomChar extends Component {
 
     marvelServices = new MarvelServices();
 
-    getAllChar = () => {
-        this.marvelServices.getAllCharacters().then(res => console.log(res));
-    }
-
     getRandomChar = () => {
         const randomId = Math.floor(Math.random() * (1011400 - 1011000) + 1011100)
 
