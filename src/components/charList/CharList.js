@@ -2,6 +2,7 @@ import './charList.scss';
 import abyss from '../../resources/img/abyss.jpg';
 
 const CharList = () => {
+
     return (
         <div className="char__list">
             <ul className="char__grid">
