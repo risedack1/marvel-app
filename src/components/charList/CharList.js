@@ -18,43 +18,54 @@ class CharList extends Component {
             .then(this.getListChar)
             .catch(error => {
                 console.log(error);
-
-                this.setState({
-                    error: true,
-                })
+                this.onError();
             })
     }
 
     marvelServices = new MarvelServices();
 
-    getListChar = (arr) => {
+    getListChar = (chars) => {
         this.setState({
-            chars: arr.map(char => {
-                const { id, name, thumbnail } = char;
-
-                let styleImage = { objectFit: 'cover' };
-
-                if (thumbnail.slice(-23, -4) === 'image_not_available') {
-                    styleImage = { objectFit: 'contain' };
-                }
-
-                return (
-                    <li className="char__item" key={id}>
-                        <img src={thumbnail} style={styleImage} alt={name} />
-                        <div className="char__name">{name}</div>
-                    </li>
-                )
-            }),
+            chars,
             loading: false,
         });
+    }
+
+    renderItems = (arr) => {
+        return arr.map(char => {
+            const { id, name, thumbnail } = char;
+            const { onSelectedChar } = this.props;
+
+            let styleImage = { objectFit: 'cover' };
+
+            if (thumbnail.slice(-23, -4) === 'image_not_available') {
+                styleImage = { objectFit: 'contain' };
+            }
+
+            return (
+                <li className="char__item" key={id} onClick={() => onSelectedChar(id)}>
+                    <img src={thumbnail} style={styleImage} alt={name} />
+                    <div className="char__name">{name}</div>
+                </li>
+            )
+        });
+    }
+
+    onError = () => {
+        this.setState({
+            loading: false,
+            error: true,
+        })
     }
 
     render() {
         const { chars, error, loading } = this.state;
 
+        const items = this.renderItems(chars);
+
         const errorMessage = error ? <ErrorMessage /> : null;
         const spinner = loading ? <Spinner /> : null;
-        const content = !(loading || error) ? chars : null;
+        const content = !(loading || error) ? items : null;
 
         let charGridStyles = { gridTemplateColumns: 'repeat(3, 200px)' }
 
