@@ -76,8 +76,24 @@ class CharList extends Component {
         })
     }
 
+    refItems = [];
+
+    setRef = ref => {
+        this.refItems.push(ref);
+    }
+
+
+
+    setActiveItem = (id) => {
+        console.log(this.refItems[id], id);
+        this.refItems.forEach(item => item.classList.remove('char__item_selected'));
+        this.refItems[id].classList.add('char__item_selected');
+    }
+
+
+
     renderItems = (arr) => {
-        return arr.map(char => {
+        return arr.map((char, i) => {
             const { id, name, thumbnail } = char;
             const { onSelectedChar } = this.props;
 
@@ -88,7 +104,20 @@ class CharList extends Component {
             }
 
             return (
-                <li className="char__item" key={id} onClick={() => onSelectedChar(id)}>
+                <li className="char__item"
+                    key={id} tabIndex="0"
+                    ref={this.setRef}
+                    onClick={() => {
+                        onSelectedChar(id);
+                        this.setActiveItem(i);
+                    }}
+                    onKeyPress={(e) => {
+                        if (e.key === 'Enter') {
+                            onSelectedChar(id);
+                            this.setActiveItem(i);
+                        }
+                    }}
+                >
                     <img src={thumbnail} style={styleImage} alt={name} />
                     <div className="char__name">{name}</div>
                 </li>
