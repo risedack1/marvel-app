@@ -3,32 +3,26 @@ import PropTypes from 'prop-types';
 
 import Spinner from '../spinner/Spinner';
 import ErrorMessage from '../errorMessage/ErrorMessage';
-import MarvelServices from '../../services/MarvelServices';
+import useMarvelService from '../../services/MarvelService';
 import './charList.scss';
 
 const CharList = (props) => {
     const [chars, setChars] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(false);
     const [offset, setOffset] = useState(210);
     const [newCharsLoading, setNewCharsLoading] = useState(false);
     const [charsListEnd, setCharsListEnd] = useState(false);
 
-    const marvelServices = new MarvelServices();
+    const { loading, error, getAllCharacters } = useMarvelService();
 
     useEffect(() => {
-        onRequest();
+        onRequest(offset, true);
     }, []);
 
-    const onRequest = (offset) => {
-        onLoadingNewItems();
-        marvelServices
-            .getAllCharacters(offset)
+    const onRequest = (offset, initial) => {
+        initial ? setNewCharsLoading(false) : setNewCharsLoading(true);
+
+        getAllCharacters(offset)
             .then(getListChar)
-            .catch(error => {
-                console.log(error);
-                onError();
-            })
     }
 
     useEffect(() => {
@@ -50,7 +44,7 @@ const CharList = (props) => {
         }
 
         if (documentHeight === scrollHeight) {
-            onRequest(offset);
+            onRequest(offset, false);
         }
     }
 
@@ -61,15 +55,10 @@ const CharList = (props) => {
             ended = true;
         }
 
-        setLoading(false);
         setNewCharsLoading(false);
         setOffset(offset => offset + 9);
         setCharsListEnd(ended);
         setChars(chars => [...chars, ...newChars]);
-    }
-
-    const onLoadingNewItems = () => {
-        setNewCharsLoading(true);
     }
 
     const refItems = useRef([]);
@@ -116,16 +105,10 @@ const CharList = (props) => {
         });
     }
 
-    const onError = () => {
-        setError(true);
-        setLoading(false);
-    }
-
     const items = renderItems(chars);
 
     const errorMessage = error ? <ErrorMessage /> : null;
-    const spinner = loading ? <Spinner /> : null;
-    const content = !(loading || error) ? items : null;
+    const spinner = loading && !newCharsLoading ? <Spinner /> : null;
 
     let charGridStyles = { gridTemplateColumns: 'repeat(3, 200px)' }
 
@@ -138,7 +121,7 @@ const CharList = (props) => {
             <ul className="char__grid" style={charGridStyles}>
                 {errorMessage}
                 {spinner}
-                {content}
+                {items}
             </ul>
             <button
                 className="button button__main button__long"
