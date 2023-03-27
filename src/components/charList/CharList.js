@@ -25,6 +25,19 @@ const CharList = (props) => {
             .then(getListChar)
     }
 
+    const getListChar = (newChars) => {
+        let ended = false;
+
+        if (newChars.length < 9) {
+            ended = true;
+        }
+
+        setNewCharsLoading(false);
+        setOffset(offset => offset + 9);
+        setCharsListEnd(ended);
+        setChars(chars => [...chars, ...newChars]);
+    }
+
     useEffect(() => {
         window.addEventListener('scroll', onScroll);
 
@@ -46,19 +59,6 @@ const CharList = (props) => {
         if (documentHeight === scrollHeight) {
             onRequest(offset, false);
         }
-    }
-
-    const getListChar = (newChars) => {
-        let ended = false;
-
-        if (newChars.length < 9) {
-            ended = true;
-        }
-
-        setNewCharsLoading(false);
-        setOffset(offset => offset + 9);
-        setCharsListEnd(ended);
-        setChars(chars => [...chars, ...newChars]);
     }
 
     const refItems = useRef([]);
