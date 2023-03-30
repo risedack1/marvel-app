@@ -47,6 +47,8 @@ const ComicsList = () => {
     const spinner = loading && !comicsList.length ? <Spinner /> : null;
     const errorMessage = error ? <ErrorMessage /> : null;
 
+    console.log('comics list');
+
     return (
         <div className="comics__list">
             {spinner}

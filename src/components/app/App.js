@@ -1,43 +1,31 @@
-import { useState } from "react";
+// здесь мы используем as что бы переименовать имя функции по-умолчанию
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 
 import AppHeader from "../appHeader/AppHeader";
-import RandomChar from "../randomChar/RandomChar";
-import CharList from "../charList/CharList";
-import CharInfo from "../charInfo/CharInfo";
-import ComicsList from "../comicsList/ComicsList";
-import ErrorBoundary from "../errorBoundary/ErrorBoundary";
-
-import decoration from '../../resources/img/vision.png';
+// прием который используется для того что бы компоновать множество страниц компонентов в одном файле, в папке pages мы создаем файлы со всеми страницами и главный файл index, и вноге инпортируем все страницы и за него ввиде обьекта экспортируем их, при ипорте в другой компонент в таком случае в пути можно прописать только название папки и не дописывать index
+import { MainPage, ComicsPage } from "../pages";
 
 const App = () => {
-    const [selectedChar, setChar] = useState(null);
-
-    const onSelectedChar = (id) => {
-        setChar(id);
-    }
-
     return (
-        <div className="app">
-            <AppHeader />
-            <main>
-                <ErrorBoundary>
-                    <ComicsList />
-                </ErrorBoundary>
-                {/* <ErrorBoundary>
-                    <RandomChar />
-                </ErrorBoundary>
-                <div className="char__content">
-                    <ErrorBoundary>
-                        <CharList onSelectedChar={onSelectedChar} />
-                    </ErrorBoundary>
-                    <ErrorBoundary>
-                        <CharInfo charId={selectedChar} />
-                    </ErrorBoundary>
-                </div>
-                <img className="bg-decoration" src={decoration} alt="vision" /> */}
-
-            </main>
-        </div>
+        // компонент Reouter нужен для того что бы работали все ссылки и все страницы на которые будут ссылаться эти ссылки внутри одного компонента
+        <Router>
+            <div className="app">
+                <AppHeader />
+                <main>
+                    <Switch>
+                        {/* route будет грузится если в url адрессе появится соответствующая ему ссылка */}
+                        {/* пути по которым будут грузится компоненты */}
+                        <Route path="/comics">
+                            <ComicsPage />
+                        </Route>
+                        {/* артибут exact нужен для того что бы правильно загружались страницы, он говорит компоненту, что нужно сразвнивать url полностью, а не по частям как это сделанно по-умолчанию */}
+                        <Route exact path="/">
+                            <MainPage />
+                        </Route>
+                    </Switch>
+                </main>
+            </div>
+        </Router>
     )
 }
 
