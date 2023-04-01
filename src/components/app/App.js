@@ -1,9 +1,9 @@
 // здесь мы используем as что бы переименовать имя функции по-умолчанию
-import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 
 import AppHeader from "../appHeader/AppHeader";
 // прием который используется для того что бы компоновать множество страниц компонентов в одном файле, в папке pages мы создаем файлы со всеми страницами и главный файл index, и вноге инпортируем все страницы и за него ввиде обьекта экспортируем их, при ипорте в другой компонент в таком случае в пути можно прописать только название папки и не дописывать index
-import { MainPage, ComicsPage } from "../pages";
+import { MainPage, ComicsPage, Page404 } from "../pages";
 
 const App = () => {
     return (
@@ -12,17 +12,14 @@ const App = () => {
             <div className="app">
                 <AppHeader />
                 <main>
-                    <Switch>
+                    <Routes>
                         {/* route будет грузится если в url адрессе появится соответствующая ему ссылка */}
                         {/* пути по которым будут грузится компоненты */}
-                        <Route path="/comics">
-                            <ComicsPage />
-                        </Route>
+                        <Route path="/comics" element={<ComicsPage />} />
                         {/* артибут exact нужен для того что бы правильно загружались страницы, он говорит компоненту, что нужно сразвнивать url полностью, а не по частям как это сделанно по-умолчанию */}
-                        <Route exact path="/">
-                            <MainPage />
-                        </Route>
-                    </Switch>
+                        <Route path="/" element={<MainPage />} />
+                        <Route path="*" element={<Page404 />} />
+                    </Routes>
                 </main>
             </div>
         </Router>
