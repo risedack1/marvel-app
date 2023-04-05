@@ -14,8 +14,15 @@ const CharList = (props) => {
 
     const { loading, error, getAllCharacters } = useMarvelService();
 
+    let countEffect = 0;
+
     useEffect(() => {
+        console.log(1);
+        if (countEffect > 0) return;
+
         onRequest(offset, true);
+
+        countEffect++;
     }, []);
 
     const onRequest = (offset, initial) => {
